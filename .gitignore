@@ -1,0 +1,20 @@
+# Large outputs and model checkpoints
+savedmodels/
+savedmodels_old/
+results/
+
+# Temporary files
+*.tmp
+*.txt
+*.ipynb_checkpoints/
+
+# Specific scripts/files
+processor_robust copy.py
+multimodal_trainer copy.py
+Cron.ipynb
+temp.txt
+
+# Optional: ignore all PyTorch checkpoints anywhere
+*.pth
+*.pt
+*.ckpt
