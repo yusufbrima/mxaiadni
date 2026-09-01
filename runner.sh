@@ -4,7 +4,6 @@ set -euo pipefail
 
 # SCRIPT="tabular_trainer.py"
 # SCRIPT="vision_trainer.py"
-# SCRIPT="v_trainer.py"
 SCRIPT="multimodal_trainer.py"
 
 echo "============================================================"

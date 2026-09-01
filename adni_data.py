@@ -15,38 +15,6 @@ import monai.transforms as mt
 import monai.transforms as mt
 
 
-# def get_train_transforms():
-#     return tio.Compose([
-#         # LR flip -- verify axis 0 is actually left-right for your orientation
-#         # (see sanity check at bottom of file before trusting this in training).
-#         tio.RandomFlip(axes=(0,), flip_probability=0.5),
- 
-#         # Small rigid-ish affine: mild rotation/translation, near-1.0 scaling.
-#         # Keeps global shape intact while giving the CNN pose invariance.
-#         tio.RandomAffine(
-#             scales=(0.97, 1.03),
-#             degrees=8,
-#             translation=4,
-#             image_interpolation='linear',
-#             p=0.5,
-#         ),
- 
-#         # Approximates scanner noise. std is small since inputs are already
-#         # z-score normalized (values mostly in roughly [-3, 3]).
-#         tio.RandomNoise(mean=0, std=(0, 0.04), p=0.3),
- 
-#         # Mild contrast/gamma jitter for robustness to acquisition differences.
-#         tio.RandomGamma(log_gamma=(-0.2, 0.2), p=0.3),
- 
-#         # Small simulated *residual* bias field -- your volumes are already
-#         # N4ITK-corrected, so this should stay low-magnitude; it's meant to
-#         # make the model robust to imperfect correction, not reintroduce a
-#         # strong field.
-#         tio.RandomBiasField(coefficients=0.3, order=3, p=0.2),
-#     ])
-
-
-
 class NIfTIFolderDataset(Dataset):
     def __init__(self, root_dir, target_shape=(128, 128, 128), transform=None):
         self.root_dir     = Path(root_dir)
@@ -94,39 +62,6 @@ class NIfTIFolderDataset(Dataset):
             img_tensor = self.transform(img_tensor)
 
         return img_tensor, torch.tensor(label_idx, dtype=torch.long)
-
-
-
-
-# class ADNIDataset(Dataset):
-#     def __init__(self, dataframe, CLASSES, transform=None):
-#         self.df = dataframe
-#         self.transform = transform
-#         self.CLASSES = CLASSES
-#         self.label_map = {label: i for i, label in enumerate(self.CLASSES)}
-
-#     def __len__(self):
-#         return len(self.df)
-
-#     def __getitem__(self, idx):
-#         row = self.df.iloc[idx]
-        
-#         # Load preprocessed & Z-score normalized NIfTI (128x128x128)
-#         img_sitk = sitk.ReadImage(row['processed_path'], sitk.sitkFloat32)
-#         img_array = sitk.GetArrayFromImage(img_sitk).astype('float32')
-        
-#         # Convert to tensor and add Channel Dim: (1, 128, 128, 128)
-#         img_tensor = torch.from_numpy(img_array).unsqueeze(0)
-        
-#         # Apply MONAI Augmentations (Geometric & Artifacts)
-#         if self.transform:
-#             img_tensor = self.transform(img_tensor)
-        
-#         # Get Label
-#         label_name = row['Group']
-#         label = torch.tensor(self.label_map[label_name], dtype=torch.long)
-            
-#         return img_tensor, label
 
 
 
